@@ -1,0 +1,11 @@
+{
+  "input_dim": 107,
+  "latent_dim_supervised": 2,
+  "latent_dim_variational": 1,
+  "eta": 0.01,
+  "kappa": 5.0,
+  "learning_rate": 0.0001,
+  "batch_size": 64,
+  "epochs": 500,
+  "patience": 10
+}
