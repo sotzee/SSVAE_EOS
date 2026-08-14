@@ -108,7 +108,7 @@ class VAE_EoS:
     # -------- Data prep --------
     def inputs(self,data_path):
         from read_data import read_data
-        X_train, X_val, X_test, y_train_obs, y_val_obs, y_test_obs, df_data_obs, df_cs2, df_boundary = read_data(data_path)
+        X_train, X_val, X_check, X_test, y_train_obs, y_val_obs, y_check_obs, y_test_obs, df_data_obs, df_cs2, df_boundary = read_data(data_path)
 
         # ----------------------------
         # 4. Normalize Inputs
