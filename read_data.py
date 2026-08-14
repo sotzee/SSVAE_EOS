@@ -54,8 +54,8 @@ def read_data(data_dir):
 
     # filter region of data
     logic_cs2 = np.array(df_cs2)[:,:101].max(axis=1)<1
-    logic_Mmax = np.logical_and(np.array(y_latent_known)[:,0]>1.95,np.array(y_latent_known)[:,0]<2.55)
-    logic_R14  = np.logical_and(np.array(y_latent_known)[:,1]>3*np.array(y_latent_known)[:,0]+4,np.array(y_latent_known)[:,1]<14.5)
+    logic_Mmax = np.logical_and(np.array(y_latent_known)[:,0]>1.95,np.array(y_latent_known)[:,0]<2.5)
+    logic_R14  = np.logical_and(np.array(y_latent_known)[:,1]>3*np.array(y_latent_known)[:,0]+4,np.array(y_latent_known)[:,1]<15)
     logic = np.logical_and(logic_cs2,np.logical_and(logic_Mmax, logic_R14))
     
     data_full = data_full[logic]
@@ -68,13 +68,16 @@ def read_data(data_dir):
     # 3. Train / Validation / Test Split
     # ----------------------------
     X_train, X_temp, y_train_obs, y_temp_obs = train_test_split(
-        X, y_latent_known, test_size=0.25, random_state=42
+        X, y_latent_known, test_size=0.40, random_state=42
     )
-    X_val, X_test, y_val_obs, y_test_obs = train_test_split(
-        X_temp, y_temp_obs, test_size=0.40, random_state=42
+    X_val,   X_temp, y_val_obs,   y_temp_obs = train_test_split(
+        X_temp, y_temp_obs, test_size=0.50, random_state=42
+    )
+    X_test,  X_pick, y_test_obs,  y_pick_obs = train_test_split(
+        X_temp, y_temp_obs, test_size=0.50, random_state=42
     )
 
-    return X_train, X_val, X_test, y_train_obs, y_val_obs, y_test_obs, df_data_obs, df_cs2, df_boundary
+    return X_train, X_val, X_pick, X_test, y_train_obs, y_val_obs, y_pick_obs, y_test_obs, df_data_obs, df_cs2, df_boundary
 
 
 # data_dir='./data_skyrme/'
