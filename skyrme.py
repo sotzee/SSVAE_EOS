@@ -240,12 +240,36 @@ def get_Etot(n_p, n_n, params):
     eps_lep=lepton_eos_array_nlep(n_p,m_e_MeV,m_muon_MeV)[1]
     return (eps+eps_lep)/(n_p + n_n)
 
+# @jit
+# def compute_criteria(nB, Yp, params):
+#     # Define energy as a function of [nB, Yp]
+#     def E_func(x):
+#         nB,Yp=x
+#         return get_Etot(nB*Yp, nB*(1-Yp), params)
+    
+#     # First derivatives
+#     grad_E = grad(E_func)
+    
+#     # Second derivatives (Hessian)
+#     hessian_E = jacfwd(grad_E)
+    
+#     # Compute derivatives at the given (nB, Yp)
+#     hess = hessian_E(jnp.array([nB, Yp]))
+    
+#     d2EdnB2 = hess[0, 0]
+#     d2EdYp2 = hess[1, 1]
+#     d2EdnBdYp = hess[0, 1]  # Mixed derivative
+    
+#     # Determinant of Hessian (stability criterion)
+#     criteria = d2EdnB2 * d2EdYp2 - d2EdnBdYp**2
+#     return criteria
 @jit
-def compute_criteria(nB, Yp, params):
-    # Define energy as a function of [nB, Yp]
+def compute_criteria(nB, Yp_nB, params):
+    # Define energy density as a function of [nB, Yp*nB]; Using all extensive variables (July 2026) refer to Kubis 2008.
     def E_func(x):
-        nB,Yp=x
-        return get_Etot(nB*Yp, nB*(1-Yp), params)
+        nB,Yp_nB=x
+        Yp=Yp_nB/nB
+        return eosDensity_from_n_jax(nB*Yp, nB*(1-Yp), params)
     
     # First derivatives
     grad_E = grad(E_func)
@@ -253,15 +277,11 @@ def compute_criteria(nB, Yp, params):
     # Second derivatives (Hessian)
     hessian_E = jacfwd(grad_E)
     
-    # Compute derivatives at the given (nB, Yp)
-    hess = hessian_E(jnp.array([nB, Yp]))
-    
-    d2EdnB2 = hess[0, 0]
-    d2EdYp2 = hess[1, 1]
-    d2EdnBdYp = hess[0, 1]  # Mixed derivative
+    # Compute derivatives at the given (nB, Yp*nB)
+    hess = hessian_E(jnp.array([nB, Yp*nB]))
     
     # Determinant of Hessian (stability criterion)
-    criteria = d2EdnB2 * d2EdYp2 - d2EdnBdYp**2
+    criteria = hess[0, 0] * hess[1, 1] - hess[0, 1]**2
     return criteria
     
 @jit
