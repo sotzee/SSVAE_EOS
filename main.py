@@ -20,11 +20,16 @@ parameters=[2,0.01,2]
 
 parallel_run = True # change to false if you don't want parallel
 latent_dim_list = [1,2,3]
-eta_list = [0.0001,0.001,0.01,0.1]
-kappa_list = [1,2,5,10]
+# eta_list = [0.0001,0.001,0.01,0.1]
+# kappa_list = [1,2,5,10]
 
-# eta_list = [0.001,0.01]
-# kappa_list = [2,5]f
+eta_list = [0.001,0.01]
+kappa_list = [2,5]
+
+#dirname='data_invertedcs2_logcc'
+#dirname='data_log_bignet'
+#dirname='data_log_MmaxOnly'
+#dirname='data_log1'
 
 def main_single_run(parameters, other_args):
     latent_dim_variational, eta, kappa = parameters
